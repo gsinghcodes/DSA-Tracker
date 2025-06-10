@@ -1,4 +1,4 @@
-#DSA Problems List React App
+# DSA Problems List React App
 
 ## Overview
 
@@ -39,7 +39,7 @@ This React application displays a list of Data Structures & Algorithms (DSA) pro
 
 4. **Open your browser and visit:**
   ```
-  http://localhost:3000
+  http://localhost:5173
   ```
 
 ---
