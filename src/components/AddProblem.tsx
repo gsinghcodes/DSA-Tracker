@@ -11,7 +11,6 @@ function AddProblem() {
   const handleSubmit = (e) => {
     e.preventDefault()
     setDifficulty(e.target.value)
-    console.log(e.target.value)
   }
 
   return (
