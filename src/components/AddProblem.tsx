@@ -1,22 +1,32 @@
 import { useState } from "react";
+import type { ProblemData } from "./ProblemList";
 
-function AddProblem() {
+type AddProblemProps = {
+  addProblem: (newProblem: ProblemData) => void
+}
+
+function AddProblem({addProblem}: AddProblemProps) {
   let [name, setName] = useState("");
-  let [difficulty, setDifficulty] = useState("")
 
-  const handleChange = (e) => {
+  const handleChange = (e: {target: {value: string}}) => {
     setName(e.target.value)
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    setDifficulty(e.target.value)
+    const newProblem: ProblemData = {
+      name,
+      difficulty: e.target.value,
+      status: 'unsolved',
+    } 
+    addProblem(newProblem)
   }
 
   return (
     <div className="flex rounded-xl h-17 gap-3 items-center hover:bg-slate-200 bg-slate-100 hover:border-white m-4 justify-between p-3">
       <div>
         <input
+          placeholder="Problem name.."
           onChange={e => handleChange(e)}
           type="text"
           className="w-full border-none pl-3 outline-none focus:border-none h-10 font-semibold text-2xl"

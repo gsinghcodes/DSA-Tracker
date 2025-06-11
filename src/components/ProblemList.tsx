@@ -2,7 +2,7 @@ import { useState } from "react";
 import Problem from "./Problem";
 import AddProblem from "./AddProblem";
 
-type ProblemData = {
+export type ProblemData = {
   name: string;
   status: "solved" | "unsolved";
   difficulty: "easy" | "medium" | "hard";
@@ -11,20 +11,14 @@ type ProblemData = {
 
 function ProblemList() {
   
-  const problems: ProblemData[] = [
-    {
-      name: "2Sum",
-      status: "solved",
-      difficulty: "medium",
-    },
-    {
-      name: "Prefix sum",
-      status: "unsolved",
-      difficulty: "easy",
-    },
-  ];
+  let [problems, setProblems] = useState<ProblemData[]>([])
   
   let [add, setAdd] = useState(false);
+
+  function addProblem(newProblem: ProblemData) {
+    setProblems([...problems, newProblem])
+    setAdd(false)
+  }
   
   const handleClick = () => {
     setAdd(true)
@@ -36,7 +30,7 @@ function ProblemList() {
         DSA Problems
       </h1>
       <div>
-        {problems.map((problem, index) => (
+        {problems.length === 0? <h2 className=" text-center text-4xl pt-3">It's Never too late to start</h2>: problems.map((problem, index) => (
           <Problem
             key={index}
             id={index + 1}
@@ -49,7 +43,7 @@ function ProblemList() {
 
       {add && (
         <div>
-          <AddProblem />
+          <AddProblem addProblem={addProblem} />
         </div>
       )}
 
