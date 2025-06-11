@@ -3,9 +3,10 @@ import Problem from "./Problem";
 import AddProblem from "./AddProblem";
 
 export type ProblemData = {
+  id: number;
   name: string;
-  status: "solved" | "unsolved";
-  difficulty: "easy" | "medium" | "hard";
+  status: string;
+  difficulty: string;
 };
 
 
@@ -19,24 +20,30 @@ function ProblemList() {
     setProblems([...problems, newProblem])
     setAdd(false)
   }
+
+  function removeProblem(problemId: number) {
+    setProblems(prev => prev.filter(p => p.id !== problemId))
+  }
   
   const handleClick = () => {
     setAdd(true)
   };
 
   return (
-    <div className="flex flex-col w-1/3 bg-white rounded-2xl shadow-2xl">
-      <h1 className="bg-blue-500 p-5 text-center text-white text-5xl font-bold rounded-t-2xl">
+    <div className="w-[80vw] md:max-w-170 flex flex-col bg-white rounded-2xl shadow-2xl">
+      <h1 className="bg-blue-500 p-5 text-center text-white text-4xl md:text-5xl font-bold rounded-t-2xl">
         DSA Problems
       </h1>
       <div>
-        {problems.length === 0? <h2 className=" text-center text-4xl pt-3">It's Never too late to start</h2>: problems.map((problem, index) => (
+        {problems.length === 0? <h2 className=" text-center text-4xl text-gray-600 pt-3">It's Never too late to start.Click on the button to add new problems</h2>: problems.map((problem, index) => (
           <Problem
-            key={index}
-            id={index + 1}
+            key = {problem.id}
+            id = {problem.id}
+            idx={index + 1}
             name={problem.name}
             status={problem.status}
             difficulty={problem.difficulty}
+            removeProblem={removeProblem}
           />
         ))}
       </div>
