@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Problem from "./Problem";
 import AddProblem from "./AddProblem";
 
@@ -9,24 +9,72 @@ export type ProblemData = {
   difficulty: string;
 };
 
-
 function ProblemList() {
-  
-  let [problems, setProblems] = useState<ProblemData[]>([])
-  
+  let [problems, setProblems] = useState<ProblemData[]>([]);
+
   let [add, setAdd] = useState(false);
 
+  useEffect(() => {
+    const stored = localStorage.getItem("problems");
+    if (stored) {
+      setProblems(JSON.parse(stored));
+    }
+  });
+
   function addProblem(newProblem: ProblemData) {
-    setProblems([...problems, newProblem])
-    setAdd(false)
+    if (newProblem.name === ""){
+      return
+    }
+    const updatedProblems = [...problems, newProblem];
+    setProblems(updatedProblems);
+    localStorage.setItem("problems", JSON.stringify(updatedProblems));
+    setAdd(false);
   }
 
   function removeProblem(problemId: number) {
-    setProblems(prev => prev.filter(p => p.id !== problemId))
+    setProblems((prev) => {
+      const updated = prev.filter((p) => p.id !== problemId);
+      localStorage.setItem("problems", JSON.stringify(updated))
+      return updated
+    });
   }
-  
+
+  function solveProblem(problemId: number) {
+    setProblems((prev) => {
+      const updated = prev.map((problem) =>
+        problem.id === problemId
+          ? problem.status === "unsolved"
+            ? { ...problem, status: "solved" }
+            : { ...problem, status: "unsolved" }
+          : problem
+      );
+      localStorage.setItem("problems", JSON.stringify(updated));
+      return updated;
+    });
+  }
+
+  function editProblem(
+    problemId: number,
+    newName: string,
+    newDifficulty: string
+  ) {
+    if (newName === ""){
+      return
+    }
+
+    setProblems((prev) => {
+      const updated = prev.map((problem) =>
+        problem.id === problemId
+          ? { ...problem, name: newName, difficulty: newDifficulty }
+          : problem
+      );
+      localStorage.setItem("problems", JSON.stringify(updated));
+      return updated;
+    });
+  }
+
   const handleClick = () => {
-    setAdd(true)
+    setAdd(true);
   };
 
   return (
@@ -35,17 +83,25 @@ function ProblemList() {
         DSA Problems
       </h1>
       <div>
-        {problems.length === 0? <h2 className=" text-center text-4xl text-gray-600 pt-3">It's Never too late to start.Click on the button to add new problems</h2>: problems.map((problem, index) => (
-          <Problem
-            key = {problem.id}
-            id = {problem.id}
-            idx={index + 1}
-            name={problem.name}
-            status={problem.status}
-            difficulty={problem.difficulty}
-            removeProblem={removeProblem}
-          />
-        ))}
+        {problems.length === 0 ? (
+          <h2 className=" text-center text-4xl text-gray-600 pt-3">
+            It's Never too late to start.Click on the button to add new problems
+          </h2>
+        ) : (
+          problems.map((problem, index) => (
+            <Problem
+              key={problem.id}
+              id={problem.id}
+              idx={index + 1}
+              name={problem.name}
+              status={problem.status}
+              difficulty={problem.difficulty}
+              removeProblem={removeProblem}
+              solveProblem={solveProblem}
+              editProblem={editProblem}
+            />
+          ))
+        )}
       </div>
 
       {add && (

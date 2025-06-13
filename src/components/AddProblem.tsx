@@ -54,7 +54,7 @@ function AddProblem({ addProblem }: AddProblemProps) {
           value={name}
         />
         <div className="flex flex-col gap-1">
-          <h1 className="font-semibold">Select Difficulty Level:</h1>
+          <h1 className="font-semibold">Difficulty Level:</h1>
           <div className="flex gap-3">
             {["easy", "medium", "hard"].map((level) => (
               <button
